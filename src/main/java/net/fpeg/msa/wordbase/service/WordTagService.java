@@ -1,0 +1,46 @@
+package net.fpeg.msa.wordbase.service;
+
+import net.fpeg.msa.wordbase.dao.*;
+import net.fpeg.msa.wordbase.dto.*;
+import net.fpeg.msa.wordbase.entity.*;
+import net.fpeg.msa.wordbase.exception.UserException;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.fpeg.msa.common.utils.MvcUtil.getUserId;
+import static net.fpeg.msa.common.utils.MvcUtil.insertIfNotExist;
+
+@Service
+public class WordTagService {
+
+    final
+    WordTagDao wordTagDao;
+
+    final
+    WordUserDao wordUserDao;
+
+    public WordTagService(WordTagDao wordTagDao, WordUserDao wordUserDao) {
+        this.wordTagDao = wordTagDao;
+        this.wordUserDao = wordUserDao;
+    }
+
+    public void postTag(String tagValue) throws UserException {
+        WordTag wordTag = insertIfNotExist(tagValue, "wordTagValue", wordTagDao::getByWordTagValue, wordTagDao::saveAndFlush, WordTag.class);
+        //插入出错
+        if (wordTag == null) throw new UserException("插入出错");
+        WordUser wordUser = wordUserDao.getByWordUserId(getUserId());
+        wordUser.getWordTags().add(wordTag);
+        wordUserDao.save(wordUser);
+    }
+
+    public List<WordTagDto> listTags() {
+        List<WordTagDto> wordTagDtos = new ArrayList<>();
+        for (WordTag wordTag : wordTagDao.findByWordUsers_WordUserId(getUserId())) {
+            wordTagDtos.add(new WordTagDto(wordTag.getWordTagValue()));
+        }
+        return wordTagDtos;
+    }
+
+}

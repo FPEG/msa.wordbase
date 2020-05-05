@@ -1,0 +1,57 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'com.palantir.docker' version '0.25.0'
+    id 'java'
+}
+
+group = 'net.fpeg.msa'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '14'
+
+configurations.all {
+    // check for updates every build
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://192.168.2.119:8002/repository/maven-snapshots/'
+        credentials {
+            username 'admin'
+            password 'password'
+        }
+    }
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR4")
+}
+dependencies {
+    implementation 'net.fpeg.msa:common:0.0.1-SNAPSHOT'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+
+test {
+    useJUnitPlatform()
+}

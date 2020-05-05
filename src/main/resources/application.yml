@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: wordbase
+  profiles:
+    #默认启动
+    active: dev
+  cloud:
+    consul:
+      discovery:
+        service-name: wordbase
+        deregister: true
+  datasource:
+    username: postgres
+    password: rootp
+    platform: postgresql
+    driverClassName: org.postgresql.Driver
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: update
+---
+server:
+  port: 8020
+spring:
+  profiles: dev
+  cloud:
+    consul:
+      host: 192.168.2.119
+      port: 8500
+  datasource:
+    url: jdbc:postgresql://192.168.2.119:5430/postgres
+---
+server:
+  port: 8080
+spring:
+  profiles: test
+  cloud:
+    consul:
+      host: 172.31.0.3
+      port: 8500
+  datasource:
+    url: jdbc:postgresql://172.31.10.2:5432/postgres
+---
+server:
+  port: 8080
+spring:
+  profiles: prod
