@@ -5,7 +5,7 @@ networks:
     external: true
 
 services:
-  msa-gateway:
+  msa-wordbase:
     image: fpeg/msa-wordbase:latest
     restart: on-failure
     networks:
