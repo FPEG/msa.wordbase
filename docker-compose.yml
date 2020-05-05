@@ -1,0 +1,12 @@
+version: "3.7"
+networks:
+  msa-test-net:
+    name: msa-test-net
+    external: true
+
+services:
+  msa-gateway:
+    image: fpeg/msa-wordbase:latest
+    restart: on-failure
+    networks:
+      msa-test-net:
