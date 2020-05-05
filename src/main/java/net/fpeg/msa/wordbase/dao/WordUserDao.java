@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WordUserDao extends JpaRepository<WordUser, Long>, JpaSpecificationExecutor<WordUser> {
     WordUser getByWordUserId(Long wordUserId);
+    Long countByWordUserId(Long wordUserId);
 }

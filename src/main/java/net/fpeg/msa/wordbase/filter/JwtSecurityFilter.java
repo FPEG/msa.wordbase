@@ -37,10 +37,12 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
         this.userDao = userDao;
     }
 
+    //放通登陆
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return new ArrayList<String>() {{
             add("/actuator/health");
+            add("/register/*");
         }}.stream()
                 .anyMatch(p -> new AntPathMatcher().match(p, request.getServletPath()));
     }

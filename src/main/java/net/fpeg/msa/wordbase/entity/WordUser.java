@@ -29,7 +29,7 @@ public class WordUser /*extends User*/ {
 //    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Set<WordSource> wordSources;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "word_source_root_id")
     private WordSource wordSource;
 
