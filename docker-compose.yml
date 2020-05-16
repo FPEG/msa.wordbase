@@ -1,7 +1,7 @@
 version: "3.7"
 networks:
-  msa-test-net:
-    name: msa-test-net
+  msa-web-net:
+    name: msa-web-net
     external: true
 
 services:
@@ -9,4 +9,4 @@ services:
     image: fpeg/msa-wordbase:latest
     restart: on-failure
     networks:
-      msa-test-net:
+      msa-web-net:
