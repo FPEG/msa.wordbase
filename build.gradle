@@ -5,25 +5,32 @@ plugins {
     id 'java'
 }
 
-group = 'net.fpeg.msa'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '14'
-
 configurations.all {
     // check for updates every build
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
+group = 'net.fpeg.msa'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '14'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     mavenCentral()
     maven {
-        url 'http://192.168.2.119:8002/repository/maven-snapshots/'
+        url System.getenv('MYENV') == 'TEST' ? NEXUS_URL_TEST : NEXUS_URL_PROD
         credentials {
-            username 'admin'
-            password 'password'
+            username NEXUS_USER
+            password System.getenv('MYENV') == 'TEST' ? NEXUS_PASSWORD_TEST : NEXUS_PASSWORD_PROD
         }
     }
 }
+
 
 ext {
     set('springCloudVersion', "Hoxton.SR4")
@@ -36,14 +43,14 @@ docker {
     name "fpeg/msa-${rootProject.name}:${version}"
     // 将 bootJar 任务的输出内容，复制到 build/docker/dependency 下
     // build/docker/ 为 Docker 工作目录
-    tag "latest" , "fpeg/msa-${rootProject.name}:latest"
+    tag "latest", "fpeg/msa-${rootProject.name}:latest"
     files 'Dockerfile'
 //    files tasks.distTar.outputs, 'my-file.txt'
     // 后续 Dockerfile 中复制文件时，都相对这个位置进行
 //    copySpec.from(tasks.bootJar.outputs.files.singleFile).into("dependency")
     copySpec.from(tasks.bootJar.outputs).into("dependency")
     // 指定 Dockerfile 的位置
-    buildArgs([FILENAME: "${rootProject.name}-${version}.jar"])
+    buildArgs([FILENAME: "${rootProject.name}-${version}.jar", PROFILE: "${System.getenv('MYENV')}"])
     dockerfile file("Dockerfile")
 }
 
