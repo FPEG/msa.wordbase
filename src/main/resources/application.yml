@@ -51,3 +51,5 @@ spring:
       port: 8500
   datasource:
     url: jdbc:postgresql://172.22.10.4:5432/postgres
+    username: msa
+    password: 3648317-B894-44FSD
