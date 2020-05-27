@@ -3,15 +3,14 @@ spring:
     name: wordbase
   profiles:
     #默认启动
-    active: dev
+    active: DEV
   cloud:
     consul:
       discovery:
         service-name: wordbase
         deregister: true
   datasource:
-    username: postgres
-    password: rootp
+    username: msa
     platform: postgresql
     driverClassName: org.postgresql.Driver
     initialization-mode: always
@@ -20,15 +19,16 @@ spring:
       ddl-auto: update
 ---
 server:
-  port: 8020
+  port: 9102
 spring:
   profiles: DEV
   cloud:
     consul:
-      host: 192.168.2.119
-      port: 8500
+      host: 192.168.2.12
+      port: 3599
   datasource:
-    url: jdbc:postgresql://192.168.2.119:5430/postgres
+    url: jdbc:postgresql://192.168.2.12:9084/msa
+    password: rootp
 ---
 server:
   port: 8080
@@ -36,10 +36,11 @@ spring:
   profiles: TEST
   cloud:
     consul:
-      host: 172.31.10.3
+      host: 172.22.10.3
       port: 8500
   datasource:
-    url: jdbc:postgresql://172.31.10.4:5432/postgres
+    url: jdbc:postgresql://172.22.10.4:5432/msa
+    password: rootp
 ---
 server:
   port: 8080
@@ -50,6 +51,6 @@ spring:
       host: 172.22.10.3
       port: 8500
   datasource:
-    url: jdbc:postgresql://172.22.10.4:5432/postgres
+    url: jdbc:postgresql://172.22.10.4:5432/msa
     username: msa
     password: 3648317-B894-44FSD
