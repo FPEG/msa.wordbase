@@ -53,4 +53,4 @@ spring:
   datasource:
     url: jdbc:postgresql://172.22.10.4:5432/msa
     username: msa
-    password: 3648317-B894-44FSD
+    password: 4F527C8-7579-4DBF-AC03-25FE1F8DA707
