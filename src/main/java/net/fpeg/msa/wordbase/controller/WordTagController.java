@@ -31,6 +31,7 @@ public class WordTagController {
         wordTagService.postTag(wordTagValue);
     }
 
+
     /**
      * 获取用户所有单词标签
      * @return 用户所有单词标签
