@@ -1,5 +1,6 @@
 package net.fpeg.msa.wordbase.service;
 
+import net.fpeg.msa.common.dto.BaseDto;
 import net.fpeg.msa.wordbase.dao.*;
 import net.fpeg.msa.wordbase.dto.*;
 import net.fpeg.msa.wordbase.entity.*;
@@ -26,21 +27,24 @@ public class WordTagService {
         this.wordUserDao = wordUserDao;
     }
 
-    public void postTag(String tagValue) throws UserException {
+    public void add(String tagValue) throws UserException {
         WordTag wordTag = insertIfNotExist(tagValue, "wordTagValue", wordTagDao::getByWordTagValue, wordTagDao::saveAndFlush, WordTag.class);
         //插入出错
-        if (wordTag == null) throw new UserException("插入出错");
+        if (wordTag == null) throw new UserException("未知错误");
         WordUser wordUser = wordUserDao.getByWordUserId(getUserId());
-        wordUser.getWordTags().add(wordTag);
+        if (!wordUser.getWordTags().add(wordTag))
+            throw new UserException("tag已存在");
         wordUserDao.save(wordUser);
     }
 
-    public List<WordTagDto> listTags() {
+    public WordTagListDto fetch() {
         List<WordTagDto> wordTagDtos = new ArrayList<>();
         for (WordTag wordTag : wordTagDao.findByWordUsers_WordUserId(getUserId())) {
             wordTagDtos.add(new WordTagDto(wordTag.getWordTagValue()));
         }
-        return wordTagDtos;
+        return WordTagListDto.builder()
+                .wordTagDtos(wordTagDtos)
+                .build();
     }
 
 }

@@ -1,13 +1,10 @@
 package net.fpeg.msa.wordbase.controller;
 
-import net.fpeg.msa.wordbase.dao.*;
 import net.fpeg.msa.wordbase.dto.*;
 import net.fpeg.msa.wordbase.exception.UserException;
 import net.fpeg.msa.wordbase.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/wordTag")
@@ -27,8 +24,8 @@ public class WordTagController {
      */
     @PostMapping("/{wordTagValue}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void postTag(@PathVariable("wordTagValue") String wordTagValue) throws UserException {
-        wordTagService.postTag(wordTagValue);
+    public void add(@PathVariable("wordTagValue") String wordTagValue) throws UserException {
+        wordTagService.add(wordTagValue);
     }
 
     /**
@@ -36,7 +33,7 @@ public class WordTagController {
      * @return 用户所有单词标签
      */
     @GetMapping
-    public List<WordTagDto> getTag() {
-        return wordTagService.listTags();
+    public WordTagListDto fetch() {
+        return wordTagService.fetch();
     }
 }

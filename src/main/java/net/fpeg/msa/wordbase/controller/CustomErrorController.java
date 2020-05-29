@@ -34,12 +34,13 @@ public class CustomErrorController implements ErrorController {
         System.out.println(request.getHeader("referer"));
         HttpStatus status = getStatus(request);
         if (status == HttpStatus.NO_CONTENT) {
-            return new ResponseEntity<Map<String, Object>>(status);
+            return new ResponseEntity<>(status);
         }
-        Map<String, Object> body = new HashMap<String, Object>();
+        Map<String, Object> body = new HashMap<>();
         body.put("timestamp", new Date());
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
+        body.put("value", status.getReasonPhrase());
         body.put("message", "My Custom Error Message");
         return new ResponseEntity<>(body, status);
     }
